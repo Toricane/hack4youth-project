@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>TimeCraft</title>
+        <style>
+            :root {
+                --text: #e9fbf9;
+                --background: #020c0c;
+                --primary: #91eae4;
+                --secondary: #195582;
+                --accent: #45dbd2;
+            }
+
+            body {
+                margin: 0;
+                padding: 0;
+                font-family: "Arial", sans-serif;
+                color: var(--text);
+                background-color: var(--background);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                text-align: center;
+            }
+
+            .container {
+                max-width: 600px;
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+                color: var(--primary);
+                margin-bottom: 1rem;
+            }
+
+            p {
+                font-size: 1.2rem;
+                line-height: 1.6;
+                color: var(--text);
+            }
+
+            .button {
+                display: inline-block;
+                margin-top: 2rem;
+                padding: 12px 24px;
+                font-size: 1.1rem;
+                font-weight: bold;
+                color: var(--background);
+                background: var(--accent);
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                text-decoration: none;
+                transition: transform 0.2s, background 0.2s;
+            }
+
+            .button:hover {
+                background: var(--primary);
+                transform: scale(1.05);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Welcome to TimeCraft</h1>
+            <p>
+                Effortlessly manage your events and never miss a moment. Connect
+                your Google Calendar and let TimeCraft do the rest.
+            </p>
+            <a class="button" href="/authorize">Connect to Google Calendar</a>
+        </div>
+    </body>
+</html>
