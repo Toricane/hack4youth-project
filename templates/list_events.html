@@ -307,13 +307,31 @@
             const sendButton = document.getElementById("send-button");
             const chatMessages = document.getElementById("chat-messages");
 
-            sendButton.addEventListener("click", sendMessage);
+            // Load chat messages from localStorage on page load
+            loadMessages();
+
+            sendButton.addEventListener("click", () => {
+                if (chatInput.value.trim() === "") {
+                    clearMessages();
+                } else {
+                    sendMessage();
+                    sendButton.textContent =
+                        chatInput.value.trim() === "" ? "Clear" : "Send";
+                }
+            });
+
+            chatInput.addEventListener("input", () => {
+                sendButton.textContent =
+                    chatInput.value.trim() === "" ? "Clear" : "Send";
+            });
 
             function sendMessage() {
                 const messageText = chatInput.value.trim();
                 if (messageText === "") return;
 
                 addMessage(messageText, false); // Add user message
+
+                saveMessages();
 
                 // Send message to backend
                 fetch("/chat", {
@@ -324,14 +342,47 @@
                     body: JSON.stringify({
                         message: messageText,
                         chat_log: getChatLog(),
+                        timezone:
+                            Intl.DateTimeFormat().resolvedOptions().timeZone,
                     }),
                 })
                     .then((response) => response.json())
                     .then((data) => {
                         addMessage(data.bot_response, true); // Add bot message
+                        saveMessages();
+                        if (data.bot_response.startsWith("Done!")) {
+                            location.reload();
+                        }
                     });
 
                 chatInput.value = ""; // Clear input field
+            }
+
+            function clearMessages() {
+                localStorage.removeItem("chatMessages");
+                chatMessages.innerHTML = "";
+                chatInput.value = "";
+                sendButton.textContent = "Clear"; // Ensure button text is correct
+            }
+
+            function saveMessages() {
+                const messages = getChatLog();
+                localStorage.setItem("chatMessages", JSON.stringify(messages));
+            }
+
+            function loadMessages() {
+                const storedMessages = localStorage.getItem("chatMessages");
+                if (storedMessages) {
+                    const messages = JSON.parse(storedMessages);
+                    messages.forEach((message) =>
+                        addMessage(
+                            message.content,
+                            message.role === "assistant"
+                        )
+                    );
+                }
+                sendButton.textContent =
+                    chatInput.value.trim() === "" ? "Clear" : "Send"; // Set initial button text
             }
 
             function addMessage(message, isBot) {
